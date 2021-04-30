@@ -5,9 +5,22 @@ from torch.utils.data import DataLoader
 from network import CNN
 from mydataset import MyDataset
 
+from ipdb import set_trace
+
+def validate(dataloader, model, device):
+    model.eval()
+    for data, label in val_dataloader:
+        data  = data.to(device)
+        label = label.to(device)
+        
+        output = model(data)
+        set_trace()
+        prediction = (nn.sigmoid(output)>0.5).astype(int)
+
 
 # 讀csv檔
 df = pd.read_csv('./data/dog_wolf_small/data.csv')
+set_trace()
 filename = df.img_path.tolist()
 labels   = df.label.tolist()
 
@@ -19,12 +32,21 @@ dataloader = DataLoader(
     num_workers=2,
 )
 
+val_dataloader = DataLoader(
+    dataset=mydataset,
+    batch_size=4,
+    shuffle=True,
+    num_workers=2,
+)
+
+
 device = 'cuda:0'
 
 #---------------------
 # Training
 model = CNN()
 model = model.to(device)
+model.train()
 optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
 loss_func = torch.nn.BCEWithLogitsLoss()
 
@@ -37,5 +59,8 @@ for epoch in range(1000):
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
+
+    if epoch%10==0:
+        validate(val_dataloader, model, device)
     print('epoch-{} loss = {}'.format(epoch, loss.item()))
 
