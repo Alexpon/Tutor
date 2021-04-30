@@ -7,20 +7,29 @@ from mydataset import MyDataset
 
 from ipdb import set_trace
 
+sigmoid_fn = torch.nn.Sigmoid()
+
 def validate(dataloader, model, device):
     model.eval()
+    num_data    = 0
+    num_correct = 0
     for data, label in val_dataloader:
         data  = data.to(device)
         label = label.to(device)
         
         output = model(data)
-        set_trace()
-        prediction = (nn.sigmoid(output)>0.5).astype(int)
+        output = output.detach()
+        output = output.squeeze()
+        pred_prob = sigmoid_fn(output)
+        pred_lab  = (pred_prob>0.5).int()
+        num_data    += label.shape[0]
+        num_correct += (pred_lab==label).sum().item()
+        
+    print ('[val] Accuracy =', num_correct/num_data)
 
 
 # 讀csv檔
 df = pd.read_csv('./data/dog_wolf_small/data.csv')
-set_trace()
 filename = df.img_path.tolist()
 labels   = df.label.tolist()
 
@@ -39,8 +48,10 @@ val_dataloader = DataLoader(
     num_workers=2,
 )
 
-
-device = 'cuda:0'
+if torch.cuda.is_available():
+    device = 'cuda:0'
+else:
+    device = 'cpu'
 
 #---------------------
 # Training
@@ -60,7 +71,7 @@ for epoch in range(1000):
         loss.backward()
         optimizer.step()
 
-    if epoch%10==0:
+    if epoch%2==0:
         validate(val_dataloader, model, device)
     print('epoch-{} loss = {}'.format(epoch, loss.item()))
 

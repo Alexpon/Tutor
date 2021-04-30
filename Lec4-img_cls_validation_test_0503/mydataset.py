@@ -18,7 +18,7 @@ class MyDataset(Dataset):
         self.with_da    = transforms.Compose([
             transforms.Resize(512),
             transforms.CenterCrop(size=10),
-            transforms.RandomHorizontalFlip(),
+            transforms.RandomHorizontalFlip(p=0.5),
             transforms.ToTensor()
         ])
     
