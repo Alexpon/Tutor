@@ -24,7 +24,7 @@ class MyDataset(Dataset):
     
     def __getitem__(self, index):
         # Read imgs, Data Augmentation, To tensor...
-        filename = os.path.join('data/dog_wolf_small', self.filenames[index])
+        filename = os.path.join('../data/dog_wolf_small', self.filenames[index])
         img_pil = Image.open(filename) # PIL Image
         img_tensor = self.without_da(img_pil)     
         label = self.labels[index]

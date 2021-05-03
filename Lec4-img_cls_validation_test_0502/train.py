@@ -49,7 +49,7 @@ def test(test_dataloader, model, device):
     print ('[test] Accuracy =', test_accuracy)
 
 # 讀csv檔
-df = pd.read_csv('./data/dog_wolf_small/data.csv')
+df = pd.read_csv('../data/dog_wolf_small/data.csv')
 filename = df.img_path.tolist()
 labels   = df.label.tolist()
 

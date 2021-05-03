@@ -7,7 +7,7 @@ from mydataset import MyDataset
 
 
 # 讀csv檔
-df = pd.read_csv('./data/dog_wolf_small/data.csv')
+df = pd.read_csv('../data/dog_wolf_small/data.csv')
 filename = df.img_path.tolist()
 labels   = df.label.tolist()
 
