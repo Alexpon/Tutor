@@ -30,6 +30,24 @@ def validate(dataloader, model, device):
     print ('[val] Accuracy =', val_accuracy)
     return val_accuracy
 
+def test(test_dataloader, model, device):
+    model.eval()
+    num_data    = 0
+    num_correct = 0
+    for data, label in test_dataloader:
+        data  = data.to(device)
+        label = label.to(device)
+        
+        output = model(data)
+        output = output.detach()
+        output = output.squeeze()
+        pred_prob = sigmoid_fn(output)
+        pred_lab  = (pred_prob>0.5).int()
+        num_data    += label.shape[0]
+        num_correct += (pred_lab==label).sum().item()
+    test_accuracy = num_correct/num_data
+    print ('[test] Accuracy =', test_accuracy)
+
 # 讀csv檔
 df = pd.read_csv('./data/dog_wolf_small/data.csv')
 filename = df.img_path.tolist()
@@ -85,8 +103,10 @@ for epoch in range(10):
             'optimizer_state_dict' :  optimizer.state_dict(),
             'val_accuracy'         :  val_accuracy,
         }
-    model_dir = './model'
-    if not os.path.exists(model_dir):
-        os.makedirs(model_dir)
-    ckpt_path = os.path.join(model_dir, 'epoch-{}.ckpt'.format(epoch))
-    torch.save(state, ckpt_path)
+        model_dir = './model'
+        if not os.path.exists(model_dir):
+            os.makedirs(model_dir)
+        ckpt_path = os.path.join(model_dir, 'epoch-{}.ckpt'.format(epoch))
+        torch.save(state, ckpt_path)
+    
+test(dataloader, model, device)
