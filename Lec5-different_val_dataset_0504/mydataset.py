@@ -15,8 +15,7 @@ class MyDataset(Dataset):
             transforms.ToTensor()
         ])
         self.with_da    = transforms.Compose([
-            transforms.Resize(512),
-            transforms.CenterCrop(size=10),
+            transforms.Resize((512,512)),
             transforms.RandomHorizontalFlip(p=0.5),
             transforms.ToTensor()
         ])
@@ -26,9 +25,9 @@ class MyDataset(Dataset):
         filename = os.path.join('../data/dog_wolf_small', self.filenames[index])
         img_pil = Image.open(filename) # PIL Image
         # witout data augmentation
-        img_tensor = self.without_da(img_pil)  
+        #img_tensor = self.without_da(img_pil)  
         # with data augmentation
-        # img_tensor = self.with_da(img_pil)
+        img_tensor = self.with_da(img_pil)
         label = self.labels[index]
         return img_tensor, label
 
