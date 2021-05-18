@@ -6,4 +6,4 @@ cd example_dir/
 python hello_argument.py \
 --int_arg ${INT} \
 --float_arg ${FLOAT} \
---str_arg ${STR}
+--str_arg ${STR} \
