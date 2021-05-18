@@ -1,0 +1,12 @@
+data:
+  train_path: '../data/dog_wolf_small/data.csv'
+  val_path: '../data/dog_wolf_small_v2/data.csv'
+
+train:
+  epoch: 10
+  batch: 4
+  transform_type: 'None'
+
+plot: False
+
+save_model: False
