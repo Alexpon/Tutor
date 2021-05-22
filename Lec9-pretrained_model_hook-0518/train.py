@@ -10,7 +10,7 @@ from torchvision import models
 from mydataset import MyDataset, MyValDataset
 from plotter import Plotter
 
-
+from ipdb import set_trace
 
 sigmoid_fn = torch.nn.Sigmoid()
 loss_func = torch.nn.BCEWithLogitsLoss()
@@ -29,11 +29,10 @@ def save_data():
     df.to_csv('hidden_output.csv')
 
 
-
 def validate(dataloader, model, device):
     model.eval()
     # initialize module_out
-    module_out = []
+    module_out.clear()
     num_data    = 0
     num_correct = 0
     loss_sum    = 0
@@ -61,7 +60,7 @@ def validate(dataloader, model, device):
 def test(test_dataloader, model, device):
     model.eval()
     # initialize module_out
-    module_out = []
+    module_out.clear()
     num_data    = 0
     num_correct = 0
     for data, label in test_dataloader:
@@ -128,10 +127,10 @@ def main():
     model = model.to(device)
     model.train()
     optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
-
+    
     for epoch in range(config['train']['epoch']):
         # initialize module_out
-        module_out = []
+        module_out.clear()
         for img, label in dataloader:
             img = img.to(device)
             label = label.to(device)
@@ -140,7 +139,7 @@ def main():
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
-
+        set_trace()
         print('epoch-{} train loss = {}'.format(epoch, loss.item()))
         
         val_accuracy, val_loss = validate(val_dataloader, model, device)
