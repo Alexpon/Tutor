@@ -68,18 +68,20 @@ labels   = df.label.tolist()
 
 mydataset = MyDataset(filename, labels)
 
-dataloader1 = DataLoader(
+dataloader = DataLoader(
     dataset     = mydataset,
     batch_size  = config['train']['batch'],
     shuffle     = True,
     num_workers = 2,
 )
+"""
 dataloader2 = DataLoader(
     dataset     = mydataset,
     batch_size  = config['train']['batch'],
     shuffle     = True,
     num_workers = 2,
 )
+"""
 val_dataloader = DataLoader(
     dataset=mydataset,
     batch_size=config['train']['batch'],
@@ -103,10 +105,9 @@ optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
 
 for epoch in range(config['train']['epoch']):
     # Mixup pseudo code
+    """
     for (img1, label1), (img2, label2) in zip(dataloader1, dataloader2):
-        lambda_i  = random.uniform(low=0.0, high=1.0, size=img1.shape[0]) #img1.shape-->(32,256,256,3)
-        #10 * 20% = 2
-        # lambda  = [0,1, 0.2, 0.5, 0.8, 0.1, 0.6, 0.7, 0.1, 0.9, 0.1]
+        lambda_i  = random.uniform(low=0.0, high=1.0, size=(img1.shape[0],1)) #img1.shape-->(batch,256,256,3)
         new_img   = img1*lambda_i   + img2*(1-lambda_i)
         new_label = label1*labmda_i + label2*(1-labmda_i)
         out = model(img)
@@ -114,7 +115,7 @@ for epoch in range(config['train']['epoch']):
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
-
+    """
     for img, label in dataloader:
         img = img.to(device)
         label = label.to(device)
