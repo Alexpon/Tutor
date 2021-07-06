@@ -1,6 +1,0 @@
-data:
-  filepath: '../data/dog_wolf_small/data.csv'
-
-train:
-  epoch: 10
-  batch: 4
